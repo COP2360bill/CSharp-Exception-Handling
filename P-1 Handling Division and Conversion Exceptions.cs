@@ -1,53 +1,60 @@
+using System;
+
+class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        Console.WriteLine("=== Division Calculator ===");
+        Console.WriteLine("--- Robust Division Calculator ---");
+        
+        // Prompt the user for input
+        Console.Write("Enter the numerator: ");
+        string input1 = Console.ReadLine();
 
-        Console.Write("10: ");
-        string input1 = Console.ReadLine() ?? "";
+        Console.Write("Enter the denominator: ");
+        string input2 = Console.ReadLine();
 
-        Console.Write("2: ");
-        string input2 = Console.ReadLine() ?? "";
-
-        Divide(input1, input2);
-
-        Console.WriteLine("\nPress any key to exit...");
-        Console.ReadKey();
-    }
-
-    static void Divide(string num1, string num2)
-    {
         try
         {
-            // Convert input strings to integers
-            int number1 = Convert.ToInt32(num1);
-            int number2 = Convert.ToInt32(num2);
+            // Convert input strings to integers (can trigger FormatException or OverflowException)
+            int num1 = Convert.ToInt32(input1);
+            int num2 = Convert.ToInt32(input2);
 
-            // Perform division
-            int result = number1 / number2;
+            // Perform the division method
+            int result = Divide(num1, num2);
 
-            // Display the result
-            Console.WriteLine($"Result: {number1} / {number2} = {result}");
+            // Print the result if no exceptions occur
+            Console.WriteLine($"Success! Result: {num1} / {num2} = {result}");
         }
         catch (FormatException)
         {
-            Console.WriteLine(
-                "Error: Invalid input. Please enter valid integers.");
-        }
-        catch (DivideByZeroException)
-        {
-            Console.WriteLine(
-                "Error: Cannot divide by zero.");
+            // Handles invalid string formats (entering letters instead of numbers)
+            Console.WriteLine("Error: One or both inputs are not in a valid integer format. Please enter numbers only.");
         }
         catch (OverflowException)
         {
-            Console.WriteLine(
-                "Error: The number is too large or too small for an integer.");
+            // Handles numbers that are too large or too small for standard Int32
+            Console.WriteLine("Error: The number entered is too large or too small for a standard 32-bit integer.");
+            Console.WriteLine("Valid range is from -2,147,483,648 to 2,147,483,648.");
+        }
+        catch (DivideByZeroException)
+        {
+            // Handles division by zero
+            Console.WriteLine("Error: Attempted to divide by zero. Please provide a non-zero denominator.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(
-                $"An unexpected error occurred: {ex.Message}");
+            // Catches any other unexpected exceptions
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
+        finally
+        {
+            Console.WriteLine("Execution finished.");
+        }
+    }
+
+    // Helper method to perform division
+    static int Divide(int a, int b)
+    {
+        return a / b;
     }
 }
